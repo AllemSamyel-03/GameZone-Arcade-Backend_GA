@@ -1,0 +1,22 @@
+$kind: http-request
+name: Add Console Missing Platform -> 400 Bad Request
+url: "{{baseUrl}}/consoles"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "name": "Incomplete Console"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status is 400 Bad Request', function () { pm.response.to.have.status(400); });
+      pm.test('Error message mentions platform', function () {
+          var json = pm.response.json();
+          pm.expect(json.error).to.include('platform');
+      });
+    language: text/javascript
+order: 1000

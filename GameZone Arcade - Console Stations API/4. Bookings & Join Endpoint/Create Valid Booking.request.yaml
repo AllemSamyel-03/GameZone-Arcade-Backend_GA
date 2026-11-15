@@ -1,0 +1,19 @@
+$kind: http-request
+url: "{{baseUrl}}/bookings"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "gamer_id": 2,
+      "console_id": 3,
+      "start_date": "2026-11-20",
+      "end_date": "2026-11-22"
+    }
+scripts:
+  - type: afterResponse
+    code: pm.test('Status is 201 Created', function () { pm.response.to.have.status(201); });
+    language: text/javascript
+order: 2000

@@ -1,0 +1,8 @@
+$kind: collection
+description: |-
+  Backend Development Fundamentals (BDF) - Modules 1 to 3
+  Theme 16 of 30 · Console stations (ST-CSE2A-G01)
+  Card 286 of 375 · Sai Siva Teja
+  Includes automated tests for all twist tests and core CRUD/join endpoints.
+variables:
+  baseUrl: http://localhost:3000

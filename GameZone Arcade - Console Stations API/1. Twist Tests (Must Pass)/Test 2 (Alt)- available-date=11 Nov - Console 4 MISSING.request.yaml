@@ -1,0 +1,19 @@
+$kind: http-request
+name: "Test 2 (Alt): available?date=11 Nov -> Console 4 MISSING"
+url: "{{baseUrl}}/consoles/available?date=11%20Nov"
+method: GET
+queryParams:
+  - key: date
+    value: 11 Nov
+    description: Textual format '11 Nov'
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Test 2 (Alt) Passed: Status is 200', function () { pm.response.to.have.status(200); });
+      pm.test('Test 2 (Alt) Passed: Console 4 is MISSING', function () {
+          var json = pm.response.json();
+          var console4 = json.consoles.find(c => c.id === 4);
+          pm.expect(console4).to.be.undefined;
+      });
+    language: text/javascript
+order: 3000

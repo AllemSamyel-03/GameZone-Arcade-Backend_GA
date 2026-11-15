@@ -1,0 +1,19 @@
+$kind: http-request
+name: "Join Endpoint: Bookings with Gamer and Console Name"
+description: "One join endpoint: bookings with the gamer name and the console name."
+url: "{{baseUrl}}/bookings"
+method: GET
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status is 200 OK', function () { pm.response.to.have.status(200); });
+      pm.test('Contains gamer_name and console_name fields', function () {
+          var json = pm.response.json();
+          pm.expect(json.length).to.be.above(0);
+          pm.expect(json[0]).to.have.property('gamer_name');
+          pm.expect(json[0]).to.have.property('console_name');
+          pm.expect(json[0]).to.have.property('start_date');
+          pm.expect(json[0]).to.have.property('end_date');
+      });
+    language: text/javascript
+order: 1000

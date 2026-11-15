@@ -1,0 +1,28 @@
+$kind: http-request
+name: "Test 1: End before start -> 400 Bad Request"
+description: "Twist Test 1: Booking end date before start date must return HTTP 400"
+url: "{{baseUrl}}/bookings"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "gamer_id": 1,
+      "console_id": 2,
+      "start_date": "2026-11-15",
+      "end_date": "2026-11-10"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Test 1 Passed: Status is 400 Bad Request', function () {
+          pm.response.to.have.status(400);
+      });
+      pm.test('Test 1 Passed: Error indicates end date cannot be before start date', function () {
+          var json = pm.response.json();
+          pm.expect(json.error).to.include('cannot be before');
+      });
+    language: text/javascript
+order: 1000

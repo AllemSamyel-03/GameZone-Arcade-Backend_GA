@@ -1,0 +1,23 @@
+$kind: http-request
+name: "Test 3: available?date=YYYY-MM-DD (2026-11-13) -> Console 4 LISTED (200 OK)"
+description: "Twist Test 3: Booking for Console 4 ended on 12 Nov. Available query on 13 Nov must return 200 with Console 4 LISTED."
+url: "{{baseUrl}}/consoles/available?date=2026-11-13"
+method: GET
+queryParams:
+  - key: date
+    value: 2026-11-13
+    description: "YYYY-MM-DD format: Booking ended on 12 Nov, so Console 4 must be available on 13 Nov"
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Test 3 Passed: Status code is 200', function () {
+          pm.response.to.have.status(200);
+      });
+      pm.test('Test 3 Passed: Console 4 is LISTED as available', function () {
+          var json = pm.response.json();
+          var console4 = json.consoles.find(c => c.id === 4);
+          pm.expect(console4).to.not.be.undefined;
+          pm.expect(console4.id).to.eql(4);
+      });
+    language: text/javascript
+order: 4000
