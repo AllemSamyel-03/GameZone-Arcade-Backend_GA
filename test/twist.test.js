@@ -43,8 +43,8 @@ const runTests = async () => {
       body: JSON.stringify({
         gamer_id: 1,
         console_id: 2,
-        start_date: '20261115',
-        end_date: '20261110' // End before start!
+        start_date: '2026-11-15',
+        end_date: '2026-11-10' // End before start!
       })
     });
     const test1Body = await test1Res.json();
@@ -55,31 +55,50 @@ const runTests = async () => {
     );
 
     // TEST 2: Booking for Console 4, 10 to 12 Nov; available?date=11 Nov -> 200, Console 4 missing
-    console.log('\nTesting Twist Test 2: available?date=20261111 (11 Nov) -> Console 4 must be MISSING...');
-    // Test with YYYYMMDD
+    console.log('\nTesting Twist Test 2: Booking for Console 4, 10 to 12 Nov; available?date=11 Nov -> 200, Console 4 missing...');
+    
+    // Test with YYYY-MM-DD format (as shown in assignment brief card: ?date=YYYY-MM-DD)
+    const test2DashRes = await fetch(`${BASE_URL}/consoles/available?date=2026-11-11`);
+    const test2DashData = await test2DashRes.json();
+    assert(test2DashRes.status === 200, `Test 2: Status code is 200 for date=2026-11-11 (YYYY-MM-DD)`);
+    const console4InDash = test2DashData.consoles.find(c => c.id === 4);
+    assert(!console4InDash, `Test 2: Console 4 is missing from available consoles on 2026-11-11`);
+
+    // Test with YYYYMMDD format
     const test2Res = await fetch(`${BASE_URL}/consoles/available?date=20261111`);
     const test2Data = await test2Res.json();
-    assert(test2Res.status === 200, `Test 2: Status code is 200 for date=20261111`);
+    assert(test2Res.status === 200, `Test 2: Status code is 200 for date=20261111 (YYYYMMDD)`);
     const console4InTest2 = test2Data.consoles.find(c => c.id === 4);
     assert(!console4InTest2, `Test 2: Console 4 is missing from available consoles on 11 Nov (20261111)`);
 
-    // Also test with textual "11 Nov"
+    // Test with textual format "11 Nov"
     const test2TextRes = await fetch(`${BASE_URL}/consoles/available?date=11%20Nov`);
     const test2TextData = await test2TextRes.json();
+    assert(test2TextRes.status === 200, `Test 2: Status code is 200 for date="11 Nov"`);
     const console4InTest2Text = test2TextData.consoles.find(c => c.id === 4);
     assert(!console4InTest2Text, `Test 2 (textual format): Console 4 is missing for date="11 Nov"`);
 
     // TEST 3: available?date=13 Nov -> 200, Console 4 listed
-    console.log('\nTesting Twist Test 3: available?date=20261113 (13 Nov) -> Console 4 must be LISTED...');
+    console.log('\nTesting Twist Test 3: available?date=13 Nov -> 200, Console 4 listed...');
+    
+    // Test with YYYY-MM-DD format (as shown in assignment brief card: ?date=YYYY-MM-DD)
+    const test3DashRes = await fetch(`${BASE_URL}/consoles/available?date=2026-11-13`);
+    const test3DashData = await test3DashRes.json();
+    assert(test3DashRes.status === 200, `Test 3: Status code is 200 for date=2026-11-13 (YYYY-MM-DD)`);
+    const console4InDash3 = test3DashData.consoles.find(c => c.id === 4);
+    assert(!!console4InDash3, `Test 3: Console 4 is LISTED as available on 2026-11-13`);
+
+    // Test with YYYYMMDD format
     const test3Res = await fetch(`${BASE_URL}/consoles/available?date=20261113`);
     const test3Data = await test3Res.json();
-    assert(test3Res.status === 200, `Test 3: Status code is 200 for date=20261113`);
+    assert(test3Res.status === 200, `Test 3: Status code is 200 for date=20261113 (YYYYMMDD)`);
     const console4InTest3 = test3Data.consoles.find(c => c.id === 4);
     assert(!!console4InTest3, `Test 3: Console 4 is LISTED as available on 13 Nov (20261113)`);
 
-    // Also test with textual "13 Nov"
+    // Test with textual format "13 Nov"
     const test3TextRes = await fetch(`${BASE_URL}/consoles/available?date=13%20Nov`);
     const test3TextData = await test3TextRes.json();
+    assert(test3TextRes.status === 200, `Test 3: Status code is 200 for date="13 Nov"`);
     const console4InTest3Text = test3TextData.consoles.find(c => c.id === 4);
     assert(!!console4InTest3Text, `Test 3 (textual format): Console 4 is LISTED for date="13 Nov"`);
 

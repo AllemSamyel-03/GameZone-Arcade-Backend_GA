@@ -29,7 +29,7 @@ app.get('/', (req, res) => {
       consoles: {
         all: "GET /consoles",
         search: "GET /consoles?platform=PlayStation",
-        twist_available: "GET /consoles/available?date=YYYYMMDD",
+        twist_available: "GET /consoles/available?date=YYYY-MM-DD",
         one: "GET /consoles/:id",
         create: "POST /consoles",
         update: "PUT /consoles/:id",
@@ -96,3 +96,4 @@ if (require.main === module) {
 }
 
 module.exports = { app, startServer };
+

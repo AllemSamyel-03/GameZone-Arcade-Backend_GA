@@ -94,3 +94,4 @@ module.exports = {
   initDatabase,
   DB_PATH
 };
+

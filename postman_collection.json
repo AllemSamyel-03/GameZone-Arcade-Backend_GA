@@ -2,7 +2,7 @@
   "info": {
     "_postman_id": "bdf-gamezone-arcade-collection-2026",
     "name": "GameZone Arcade - Console Stations API",
-    "description": "Backend Development Fundamentals (BDF) - Modules 1 to 3\nTheme 16 of 30 · Console stations (STCSE2AG01)\nIncludes automated tests for all twist tests and core CRUD/join endpoints.",
+    "description": "Backend Development Fundamentals (BDF) - Modules 1 to 3\nTheme 16 of 30 · Console stations (ST-CSE2A-G01)\nCard 286 of 375 · Sai Siva Teja\nIncludes automated tests for all twist tests and core CRUD/join endpoints.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
@@ -54,7 +54,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"gamer_id\": 1,\n  \"console_id\": 2,\n  \"start_date\": \"20261115\",\n  \"end_date\": \"20261110\"\n}"
+              "raw": "{\n  \"gamer_id\": 1,\n  \"console_id\": 2,\n  \"start_date\": \"2026-11-15\",\n  \"end_date\": \"2026-11-10\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/bookings",
@@ -82,19 +82,19 @@
           ]
         },
         {
-          "name": "Test 2: available?date=11 Nov -> Console 4 MISSING (200 OK)",
+          "name": "Test 2: available?date=YYYY-MM-DD (2026-11-11) -> Console 4 MISSING (200 OK)",
           "request": {
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/consoles/available?date=20261111",
+              "raw": "{{baseUrl}}/consoles/available?date=2026-11-11",
               "host": ["{{baseUrl}}"],
               "path": ["consoles", "available"],
               "query": [
                 {
                   "key": "date",
-                  "value": "20261111",
-                  "description": "11 Nov 2026 - Console 4 has booking 10-12 Nov, so it should be missing"
+                  "value": "2026-11-11",
+                  "description": "YYYY-MM-DD format as required by Client Brief Card: Booking 10-12 Nov, so Console 4 must be missing on 11 Nov"
                 }
               ]
             },
@@ -120,19 +120,54 @@
           ]
         },
         {
-          "name": "Test 3: available?date=13 Nov -> Console 4 LISTED (200 OK)",
+          "name": "Test 2 (Alt): available?date=11 Nov -> Console 4 MISSING",
           "request": {
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/consoles/available?date=20261113",
+              "raw": "{{baseUrl}}/consoles/available?date=11%20Nov",
               "host": ["{{baseUrl}}"],
               "path": ["consoles", "available"],
               "query": [
                 {
                   "key": "date",
-                  "value": "20261113",
-                  "description": "13 Nov 2026 - Booking ended 12 Nov, so Console 4 must be available"
+                  "value": "11 Nov",
+                  "description": "Textual format '11 Nov'"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Test 2 (Alt) Passed: Status is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Test 2 (Alt) Passed: Console 4 is MISSING', function () {",
+                  "    var json = pm.response.json();",
+                  "    var console4 = json.consoles.find(c => c.id === 4);",
+                  "    pm.expect(console4).to.be.undefined;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Test 3: available?date=YYYY-MM-DD (2026-11-13) -> Console 4 LISTED (200 OK)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/consoles/available?date=2026-11-13",
+              "host": ["{{baseUrl}}"],
+              "path": ["consoles", "available"],
+              "query": [
+                {
+                  "key": "date",
+                  "value": "2026-11-13",
+                  "description": "YYYY-MM-DD format: Booking ended on 12 Nov, so Console 4 must be available on 13 Nov"
                 }
               ]
             },
@@ -151,6 +186,41 @@
                   "    var console4 = json.consoles.find(c => c.id === 4);",
                   "    pm.expect(console4).to.not.be.undefined;",
                   "    pm.expect(console4.id).to.eql(4);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Test 3 (Alt): available?date=13 Nov -> Console 4 LISTED",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/consoles/available?date=13%20Nov",
+              "host": ["{{baseUrl}}"],
+              "path": ["consoles", "available"],
+              "query": [
+                {
+                  "key": "date",
+                  "value": "13 Nov",
+                  "description": "Textual format '13 Nov'"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Test 3 (Alt) Passed: Status is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Test 3 (Alt) Passed: Console 4 is LISTED', function () {",
+                  "    var json = pm.response.json();",
+                  "    var console4 = json.consoles.find(c => c.id === 4);",
+                  "    pm.expect(console4).to.not.be.undefined;",
                   "});"
                 ],
                 "type": "text/javascript"
@@ -279,7 +349,6 @@
                   "pm.test('Returns created console with ID', function () {",
                   "    var json = pm.response.json();",
                   "    pm.expect(json.id).to.be.a('number');",
-                  "    pm.collectionVariables.set('createdConsoleId', json.id);",
                   "});"
                 ],
                 "type": "text/javascript"
@@ -299,7 +368,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Station 7 - Nintendo Switch 2 Pro\",\n  \"platform\": \"Nintendo Switch\"\n}"
+              "raw": "{\n  \"name\": \"Station 1 - PlayStation 5 Slim\",\n  \"platform\": \"PlayStation 5\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/consoles/1",
@@ -432,7 +501,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"gamer_id\": 2,\n  \"console_id\": 3,\n  \"start_date\": \"20261120\",\n  \"end_date\": \"20261122\"\n}"
+              "raw": "{\n  \"gamer_id\": 2,\n  \"console_id\": 3,\n  \"start_date\": \"2026-11-20\",\n  \"end_date\": \"2026-11-22\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/bookings",

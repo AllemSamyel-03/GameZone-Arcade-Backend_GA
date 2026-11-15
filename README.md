@@ -289,3 +289,4 @@ ORDER BY b.start_date DESC;
 - **30 Marks (Individual Component):**
   - [x] Clear role separation across all 6 members
   - [x] Ready-to-answer Q&A prep for the 3-minute live demo
+
